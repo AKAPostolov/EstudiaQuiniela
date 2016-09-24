@@ -213,7 +213,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 URL url = new URL(urlString);
                 BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
                 String line;
-
+                String fistLineExplanation = "";
+                boolean thereIsSecondLineSpecified = false;
                 System.out.println("---- ---- ---- ---- ----");
                 while ((line = in.readLine()) != null)
                 {
@@ -221,6 +222,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //
                     //EXPERT STATS
                     //
+                    if(lineCounter>=948)
+                    {
+                        System.out.println();
+                    }
                     if(line.contains("Nuestro pron")&&line.contains("jornada")&&line.contains("es el siguiente"))
                     {
                         startExpertStats = true;
@@ -249,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         result = currentResultChar + result;
                                     }
                                 }
-                                startExpertStats = false;
+//                                startExpertStats = false;
                             }
                             else
                             {
@@ -262,13 +267,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     }
                                 }
                             }
+                            if (line.contains("ctrlNews_tagBar") )
+                            {
+                                startExpertStats = false;
+                            }
                             arrayExpertsVoted.add(result);
-                            //MotivesVotationExperts:array:
-                            int a = line.indexOf("<br />")+"<br />".length();
-                            int z = line.indexOf("</p>")-"</p>".length();
-                            String explanation = line.substring(a,z);
-                            arrayExpertsExplain.add(explanation);
+                            thereIsSecondLineSpecified = false;
+                            fistLineExplanation="";
                         }
+                        else
+                        {
+                            if(!line.contains("strong")&&!line.contains("uestro")&&!line.contains("Según")&&!line.contains("clear"))
+                            {
+                                //MotivesVotationExperts:array:
+                                String trimCleanedString = line
+                                        .replaceAll("&nbsp;","");
+                                int a = trimCleanedString.indexOf("<br />")+"<br />".length()-2;
+                                int z = trimCleanedString.indexOf("</p>");
+                                String explanation = trimCleanedString.substring(a,z-("</p>".length()-1));
+                                if( (thereIsSecondLineSpecified) && !(fistLineExplanation.equals("")) )
+                                {
+                                    String objeto = arrayExpertsExplain.get(arrayExpertsExplain.size()-1);
+                                    String concat = objeto + "\\n" + explanation;
+                                    arrayExpertsExplain.remove(objeto);
+                                    arrayExpertsExplain.add(concat);
+                                }
+                                else
+                                {
+                                    arrayExpertsExplain.add(explanation);
+                                }
+                                fistLineExplanation = explanation;
+                                thereIsSecondLineSpecified = true;
+                            }
+                        }
+
                     }
                     //
                     ////////////////////////////////////////////////////////////////////////////////////
