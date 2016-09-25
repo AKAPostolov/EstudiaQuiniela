@@ -284,20 +284,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         .replaceAll("&nbsp;","");
                                 int a = trimCleanedString.indexOf("<br />")+"<br />".length()-2;
                                 int z = trimCleanedString.indexOf("</p>");
-                                String explanation = trimCleanedString.substring(a,z-("</p>".length()-1));
-                                if( (thereIsSecondLineSpecified) && !(fistLineExplanation.equals("")) )
+                                if(a>-1&&z>-1)
                                 {
-                                    String objeto = arrayExpertsExplain.get(arrayExpertsExplain.size()-1);
-                                    String concat = objeto + "\\n" + explanation;
-                                    arrayExpertsExplain.remove(objeto);
-                                    arrayExpertsExplain.add(concat);
+                                    String explanation = trimCleanedString.substring(a,z-("</p>".length()-1));
+                                    if( (thereIsSecondLineSpecified) && !(fistLineExplanation.equals("")) )
+                                    {
+                                        String objeto = arrayExpertsExplain.get(arrayExpertsExplain.size()-1);
+                                        String concat = objeto + "\\n" + explanation;
+                                        arrayExpertsExplain.remove(objeto);
+                                        arrayExpertsExplain.add(concat);
+                                    }
+                                    else
+                                    {
+                                        arrayExpertsExplain.add(explanation);
+                                    }
+                                    fistLineExplanation = explanation;
+                                    thereIsSecondLineSpecified = true;
                                 }
-                                else
-                                {
-                                    arrayExpertsExplain.add(explanation);
-                                }
-                                fistLineExplanation = explanation;
-                                thereIsSecondLineSpecified = true;
+
                             }
                         }
 
