@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String      url2         = "https://www.quinielista.es/enVivo/index.asp";
             WebSettings webSettings2 = webView2.getSettings();
             webSettings.setJavaScriptEnabled(true);
-            webView.loadUrl(url2);
+//            webView.loadUrl(url2);
         }
         else
         {
@@ -190,10 +190,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             boolean startExpertStats = false;
             ArrayList<String> arrayExpertsVoted = new ArrayList<String>();
             ArrayList<String> arrayExpertsExplain = new ArrayList<String>();
+            ArrayList<String> arrayResultMatch = new ArrayList<String>();
             //arrays_variables_expertos//
             /////////////////////////////
             //arrays_variables_usuarios
             boolean startUserStats = false;
+            boolean startCurrentResultSearch = false;
             String totalVotos = "";
             ArrayList<String> arrayUsersVotedUno = new ArrayList<String>();
             ArrayList<String> arrayUsersVotedEquis = new ArrayList<String>();
@@ -229,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if(line.contains("Nuestro pron")&&line.contains("jornada")&&line.contains("es el siguiente"))
                     {
                         startExpertStats = true;
+                        System.out.println("Recogiendo sugerencias de los expertos: " + lineCounter);
                     }
                     if(startExpertStats)
                     {
@@ -254,7 +257,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         result = currentResultChar + result;
                                     }
                                 }
-//                                startExpertStats = false;
                             }
                             else
                             {
@@ -267,10 +269,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     }
                                 }
                             }
-                            if (line.contains("ctrlNews_tagBar") )
-                            {
-                                startExpertStats = false;
-                            }
+
                             arrayExpertsVoted.add(result);
                             thereIsSecondLineSpecified = false;
                             fistLineExplanation="";
@@ -304,7 +303,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                             }
                         }
+                        if (line.contains("ctrlNews_tagBar") )
+                        {
+                            startExpertStats = false;
+                            startCurrentResultSearch = true;
+                        }
+                    }
 
+                    //
+                    ////////////////////////////////////////////////////////////////////////////////////
+                    ////////////////////////////////////////////////////////////////////////////////////
+                    ////////////////////////////////////////////////////////////////////////////////////
+                    // //Current results search:
+                    if(startCurrentResultSearch)
+                    {
+                        if(!line.contains("col3a"))
+                            if(line.contains("col3")||line.contains("col5"))
+                            {
+                                String trimLine = line.replace("</span></td>","").trim();
+                                String result = trimLine.substring(trimLine.length()-1,trimLine.length());
+                                if(line.contains("col5"))
+                                {
+                                    String object = arrayResultMatch.get(arrayResultMatch.size()-1);
+                                    result = object+"-"+result;
+                                    arrayResultMatch.remove(object);
+                                }
+                                arrayResultMatch.add(result);
+                                if(arrayResultMatch.size()>=15&&line.contains("col5"))
+                                {startCurrentResultSearch=false;}
+                            }
                     }
                     //
                     ////////////////////////////////////////////////////////////////////////////////////
@@ -315,7 +342,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if(line.contains("usersSoccerRank optSelectable"))
                     {
                         startUserStats = true;
-                        System.out.println("Autorizando busqueda de pronóticos personales jugados:");
+                        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                        System.out.println("Busqueda de pronóticos personales jugados:");
                     }
                     if(startUserStats)
                     {
@@ -350,7 +378,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     usersVotedUno = help.substring(a, b);
                                     if (!usersVotedUno.equals("1") && usersVotedUno!="")
                                     {
-                                        System.out.println("Recogiendo pronósticos personales 1");
+                                        System.out.println("Recogiendo pronósticos personales 1 : " + lineCounter);
                                         arrayUsersVotedUno.add(usersVotedUno);
                                         if (line.contains("highLigh"))
                                         {
@@ -389,7 +417,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     usersVotedEquis = help.substring(a, b);
                                     if (!usersVotedEquis.equals("X") && !arrayUsersVotedEquis.equals(""))
                                     {
-                                        System.out.println("Recogiendo pronósticos personales X");
+                                        System.out.println("Recogiendo pronósticos personales X " + lineCounter);
                                         arrayUsersVotedEquis.add(usersVotedEquis);
                                         if (line.contains("highLigh"))
                                         {
@@ -425,7 +453,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     usersVotedDos = help.substring(a, b);
                                     if(!usersVotedDos.equals("2") && !usersVotedDos.equals("") )
                                     {
-                                        System.out.println("Recogiendo pronósticos personales 2");
+                                        System.out.println("Recogiendo pronósticos personales 2 " + lineCounter);
                                         arrayUsersVotedDos.add(usersVotedDos);
                                         if(line.contains("highLigh"))
                                         {
@@ -448,14 +476,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         }
                         //Busqueda partido 15:
-                        System.out.println("Recogiendo pronósticos personales Partido 15");
+                        System.out.println("Recogiendo pronósticos personales Partido 15 " + lineCounter);
                         if(arrayUsersVotedDos.size()>13)
                         {
                             String linePartido15 = line.replace("  "," ").replace(" highLight","").replace("highLight","");
                             if( linePartido15.contains("<div class=\"\">")  &&
                                     linePartido15.contains("</div") )
                             {
-                                System.out.println("Encontrados resultados partido 15:");
+                                System.out.println("Encontrados resultados partido 15: " + lineCounter);
                                 String valuePartido15 = linePartido15.replace("<div class=\"\">","").replace("</div>","".trim().replace("%",""));
                                 if(arrayUsersQuinceA.size()<=3)
                                 {
@@ -488,7 +516,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     System.out.println("Linea:" + lineCounter + " |" + line);
                 }
                 int index = 1;
-                System.out.println("ARRAYS 1x2 usersSoccerRank:");
+                System.out.println("ARRAYS 1x2 usersSoccerRank: " + lineCounter);
                 if(arrayUsersVotedUno.size()>0)
                 {
                     for(String s: arrayUsersVotedUno)
@@ -500,12 +528,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                     System.out.println("15 a:" + arrayUsersQuinceA.toString());
                     System.out.println("15 b:" + arrayUsersQuinceB.toString());
-                    System.out.println("-- HIGHLIGHTS:");
+                    System.out.println("-- HIGHLIGHTS:" + lineCounter);
                     System.out.println("Type: " + arrayUsersVotedHighLightType);
                     System.out.println("Perc: " + arrayUsersVotedHighLightPercent);
                 }
-                System.out.println("Usuarios votaron:" + totalVotos);
-                index = 1;
+                System.out.println("Usuarios votaron:" + totalVotos + "Line: " + lineCounter);
+
+                in.close();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            finally
+            {
+                int index = 1;
                 System.out.println("ARRAYS 1x2 EXPERTS votes:");
                 if(arrayExpertsVoted.size()>0)
                 {
@@ -516,7 +553,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
                 index = 1;
-                System.out.println("ARRAYS 1x2 EXPERTS motives:");
+                System.out.println("ARRAYS 1x2 EXPERTS motives: ");
                 if(arrayExpertsExplain.size()>0)
                 {
                     for(String s: arrayExpertsExplain)
@@ -525,14 +562,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         index++;
                     }
                 }
-                in.close();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-            finally
-            {
+                index = 1;
+                System.out.println("ARRAYS CURRENT RESULT: ");
+                if(arrayResultMatch.size()>0)
+                {
+                    for(String s: arrayResultMatch)
+                    {
+                        System.out.println(index+" " + arrayResultMatch.get(index-1));
+                        index++;
+                    }
+                }
                 if (dialog.isShowing())
                 {
                     dialog.dismiss();
