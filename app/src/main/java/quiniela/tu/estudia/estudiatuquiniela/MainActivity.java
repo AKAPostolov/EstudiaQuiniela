@@ -14,14 +14,17 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -32,7 +35,30 @@ import java.util.ArrayList;
 @Deprecated
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
+    int tester = 0;
+    public TextView tvResultado;
     private ProgressDialog dialog;
+    //arrays_variables_expertos
+    boolean startExpertStats = false;
+    ArrayList<String> arrayEquipoIzda = new ArrayList<String>();
+    ArrayList<String> arrayEquipoDcha = new ArrayList<String>();
+    ArrayList<String> arrayExpertsVoted = new ArrayList<String>();
+    ArrayList<String> arrayExpertsExplain = new ArrayList<String>();
+    ArrayList<String> arrayResultMatch = new ArrayList<String>();
+    //arrays_variables_expertos//
+    /////////////////////////////
+    //arrays_variables_usuarios
+    boolean startUserStats = false;
+    boolean startCurrentResultSearch = false;
+    String totalVotos = "";
+    ArrayList<String> arrayUsersVotedUno = new ArrayList<String>();
+    ArrayList<String> arrayUsersVotedEquis = new ArrayList<String>();
+    ArrayList<String> arrayUsersVotedDos = new ArrayList<String>();
+    ArrayList<String> arrayUsersVotedHighLightType = new ArrayList<String>();
+    ArrayList<String> arrayUsersVotedHighLightPercent = new ArrayList<String>();
+    ArrayList<String> arrayUsersQuinceA = new ArrayList<String>();
+    ArrayList<String> arrayUsersQuinceB = new ArrayList<String>();
+    int userVoted = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -66,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if(checkNetworkConnection())
         {
+            /*
             WebView     webView     = (WebView) findViewById(R.id.webView);
             String      url         = "https://static.dataradar.es/marcador/Marcador_QUINI_lite.html";
             WebSettings webSettings = webView.getSettings();
@@ -75,13 +102,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String      url2         = "https://www.quinielista.es/enVivo/index.asp";
             WebSettings webSettings2 = webView2.getSettings();
             webSettings.setJavaScriptEnabled(true);
+            */
 //            webView.loadUrl(url2);
+            Toast.makeText(this,"Hay conexión a internet",Toast.LENGTH_LONG).show();
         }
         else
         {
             Toast.makeText(this,"No hay conexión a internet",Toast.LENGTH_LONG).show();
         }
-
+        tvResultado = (TextView)  findViewById(R.id.tvResultados);
     }
 
     @Override
@@ -136,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                String urlString = "http://quiniela.combinacionganadora.com/";
                 DownloadWebPageTask downloadWebPageTask = new DownloadWebPageTask();
                 downloadWebPageTask.doInBackground("");
+                downloadWebPageTask.onPostExecute("");
             }
             else
             {
@@ -186,29 +216,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 dialog.show();
             }
-            //arrays_variables_expertos
-            boolean startExpertStats = false;
-            ArrayList<String> arrayExpertsVoted = new ArrayList<String>();
-            ArrayList<String> arrayExpertsExplain = new ArrayList<String>();
-            ArrayList<String> arrayResultMatch = new ArrayList<String>();
-            //arrays_variables_expertos//
-            /////////////////////////////
-            //arrays_variables_usuarios
-            boolean startUserStats = false;
-            boolean startCurrentResultSearch = false;
-            String totalVotos = "";
-            ArrayList<String> arrayUsersVotedUno = new ArrayList<String>();
-            ArrayList<String> arrayUsersVotedEquis = new ArrayList<String>();
-            ArrayList<String> arrayUsersVotedDos = new ArrayList<String>();
-            ArrayList<String> arrayUsersVotedHighLightType = new ArrayList<String>();
-            ArrayList<String> arrayUsersVotedHighLightPercent = new ArrayList<String>();
-            ArrayList<String> arrayUsersVotedHighLightTypeQUINCE = new ArrayList<String>();
-            ArrayList<String> arrayUsersVotedHighLightPercentQUINCE = new ArrayList<String>();
-            ArrayList<String> arrayUsersQuinceA = new ArrayList<String>();
-            ArrayList<String> arrayUsersQuinceB = new ArrayList<String>();
-            ArrayList<String> arrayPronosticoCombiGanadora = new ArrayList<String>();
-            ArrayList<String> arrayPronosticoCombiGanadoraMotivos = new ArrayList<String>();
-            int userVoted = -1;
+
             //arrays_variables_usuarios//
             try
             {
@@ -326,21 +334,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     // //Current results search:
                     if(startCurrentResultSearch)
                     {
+                        if(line.contains("Bayer"))
+                        {
+                            System.out.println("bayerLine:" + line);
+                        }
+                        if(line.contains("ctrlIcons openButton"))
+                        {
+                            tester++;
+                            System.out.println("Counter " + tester);
+                            int a = line.indexOf("title=\"")+"title=\"".length();
+                            String aux = line.substring(a);
+                            aux = aux.replace("\"","")
+                                     .replace("target=_blank></a>","")
+                                     .trim();
+                            System.out.println("Line:" + line);
+                            int posHiphen = aux.indexOf("-");
+                            String team1 = aux.substring(0,posHiphen);
+                            String team2 = aux.substring(team1.length()+1);
+                            arrayEquipoIzda.add(team1);
+                            //String team2 = line.substring(a,b);
+                            arrayEquipoDcha.add(team2);
+                        }
                         if(!line.contains("col3a"))
-                            if(line.contains("col3")||line.contains("col5"))
+                        {
+                            if((line.contains("col3")||line.contains("col5"))&&line.contains("span")&&!line.contains("%")&&!line.contains("<td class=\"col5\">1</td>")&&!line.contains("<td class=\"col3\">-</td>"))
                             {
                                 String trimLine = line.replace("</span></td>","").trim();
                                 String result = trimLine.substring(trimLine.length()-1,trimLine.length());
+
                                 if(line.contains("col5"))
                                 {
                                     String object = arrayResultMatch.get(arrayResultMatch.size()-1);
                                     result = object+"-"+result;
                                     arrayResultMatch.remove(object);
                                 }
-                                arrayResultMatch.add(result);
-                                if(arrayResultMatch.size()>=15&&line.contains("col5"))
-                                {startCurrentResultSearch=false;}
+                                if(!result.equals(">"))
+                                {
+                                    arrayResultMatch.add(result);
+                                }
+                                if(line.contains("ctrlHeadedBox_preFooter styleCenter black"))
+                                {
+                                    startCurrentResultSearch=false;
+                                }
                             }
+                        }
+
                     }
                     //
                     ////////////////////////////////////////////////////////////////////////////////////
@@ -560,19 +598,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                     //System.out.println("Linea:" + lineCounter + " |" + line);
                 }
-                int index = 1;
-                System.out.println("ARRAYS 1x2 usersSoccerRank: size: " +arrayUsersVotedUno.size() + " line: " + lineCounter);
-                if(arrayUsersVotedUno.size()>0)
-                {
-                    for(String s: arrayUsersVotedUno)
-                    {
-                        System.out.print(index+" " + arrayUsersVotedUno.get(index-1));
-                        System.out.print(" " + arrayUsersVotedEquis.get(index-1));
-                        System.out.println(" " + arrayUsersVotedDos.get(index-1) + "");
-                        index++;
-                    }
-                }
-
                 System.out.println("Total de usuarios que votaron: " + totalVotos + "Line: " + lineCounter);
 
                 in.close();
@@ -583,6 +608,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             try
             {
+                int index = 1;
+                System.out.println("ARRAYS 1x2 usersSoccerRank: size: " +arrayUsersVotedUno.size());
+                if(arrayUsersVotedUno.size()>0)
+                {
+                    for(String s: arrayUsersVotedUno)
+                    {
+                        System.out.print(index+" " + arrayUsersVotedUno.get(index-1));
+                        System.out.print(" " + arrayUsersVotedEquis.get(index-1));
+                        System.out.println(" " + arrayUsersVotedDos.get(index-1) + "");
+                        index++;
+                    }
+                }
                 System.out.println("1 arrayUsersVotedHighLightType partido 15 size: " + arrayUsersVotedHighLightType.size());
                 if(arrayUsersVotedHighLightType.size()>0)
                     for (String s: arrayUsersVotedHighLightType)
@@ -607,8 +644,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     {
                         System.out.println("4 arrayUsersQuinceB partido 15: " + s);
                     }
-                int index = 1;
                 System.out.println("ARRAYS 1x2 EXPERTS votes: size: " + arrayExpertsVoted.size());
+                index = 1;
                 if(arrayExpertsVoted.size()>0)
                 {
                     for(String s: arrayExpertsVoted)
@@ -627,13 +664,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         index++;
                     }
                 }
-                index = 1;
+                index = 0;
                 System.out.println("ARRAYS CURRENT RESULT: size: " + arrayResultMatch.size());
                 if(arrayResultMatch.size()>0)
                 {
                     for(String s: arrayResultMatch)
                     {
-                        System.out.println(index+" " + arrayResultMatch.get(index-1));
+                        System.out.println(index+" " +arrayEquipoIzda.get(index)+"-"+arrayEquipoDcha.get(index)+" "+ arrayResultMatch.get(index));
                         index++;
                     }
                 }
@@ -652,7 +689,106 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPostExecute(String result)
         {
+            StringBuilder stringBuilder = new StringBuilder();
+            //stringBuilder.append("\n");
+            //stringBuilder.append("arrayResultMatch" + arrayResultMatch.toString());
+            try
+            {
+                int index = 1;
+                stringBuilder.append("ARRAYS 1x2 \nusersSoccerRank: \nsize: " +arrayUsersVotedUno.size());
+                stringBuilder.append("\n");
+                if(arrayUsersVotedUno.size()>0)
+                {
+                    for(String s: arrayUsersVotedUno)
+                    {
+                        stringBuilder.append(index+" " + arrayUsersVotedUno.get(index-1));
+                        stringBuilder.append(" " + arrayUsersVotedEquis.get(index-1));
+                        stringBuilder.append(" " + arrayUsersVotedDos.get(index-1) + "");
+                        stringBuilder.append("\n");
+                        index++;
+                    }
+                }
+                stringBuilder.append("arrayUsersVotedHighLightType\n size: " + arrayUsersVotedHighLightType.size());
+                if(arrayUsersVotedHighLightType.size()>0)
+                    for (String s: arrayUsersVotedHighLightType)
+                    {
+                        stringBuilder.append(s);
+                        stringBuilder.append("\n");
+                    }
+                stringBuilder.append("\n");
+                stringBuilder.append("arrayUsersVotedHighLightPercent\n  size: " + arrayUsersVotedHighLightPercent.size());
+                stringBuilder.append("\n");
+                if(arrayUsersVotedHighLightPercent.size()>0)
+                    for (String s: arrayUsersVotedHighLightPercent)
+                    {
+                        stringBuilder.append(s);
+                        stringBuilder.append("\n");
+                    }
+                stringBuilder.append("\n");
+                stringBuilder.append("arrayUsersQuinceA\n size: " + arrayUsersQuinceA.size());
+                stringBuilder.append("\n");
+                if(arrayUsersQuinceA.size()>0)
+                    for (String s: arrayUsersQuinceA)
+                    {
+                        stringBuilder.append(s);
+                        stringBuilder.append("\n");
+                    }
+                stringBuilder.append("\n");
+                stringBuilder.append("arrayUsersQuinceB \n partido : " + arrayUsersQuinceB.size());
+                stringBuilder.append("\n");
+                if(arrayUsersQuinceB.size()>0)
+                    for (String s: arrayUsersQuinceB)
+                    {
+                        stringBuilder.append(s);
+                        stringBuilder.append("\n");
+                    }
+                stringBuilder.append("\n");
+                stringBuilder.append("1x2 EXPERTS votes: size: " + arrayExpertsVoted.size());
+                stringBuilder.append("\n");
+                index = 1;
+                if(arrayExpertsVoted.size()>0)
+                {
+                    for(String s: arrayExpertsVoted)
+                    {
+                        stringBuilder.append(index+" " + arrayExpertsVoted.get(index-1));
+                        index++;
+                        stringBuilder.append("\n");
+                    }
+                }
+                stringBuilder.append("\n");
+                index = 1;
+                stringBuilder.append("1x2 EXPERTS motives: size:" + arrayExpertsExplain.size());
+                stringBuilder.append("\n");
+                if(arrayExpertsExplain.size()>0)
+                {
+                    for(String s: arrayExpertsExplain)
+                    {
+                        stringBuilder.append(index+" " + arrayExpertsExplain.get(index-1));
+                        index++;
+                        stringBuilder.append("\n");
+                    }
+                }
+                index = 1;
+                stringBuilder.append("ARRAYS CURRENT RESULT: size: " + arrayResultMatch.size());
+                stringBuilder.append("\n");
+                if(arrayResultMatch.size()>0)
+                {
+                    for(String s: arrayResultMatch)
+                    {
+                        stringBuilder.append(index+" " +arrayEquipoIzda.get(index-1)+"-"+arrayEquipoDcha.get(index-1)+" "+ arrayResultMatch.get(index-1));
+                        index++;
+                        stringBuilder.append("\n");
+                    }
+                }
+                stringBuilder.append("\n");
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
+            tvResultado.setText(stringBuilder.toString());
+            tvResultado.setMovementMethod(new ScrollingMovementMethod());
         }
     }
     public final boolean checkNetworkConnection()
