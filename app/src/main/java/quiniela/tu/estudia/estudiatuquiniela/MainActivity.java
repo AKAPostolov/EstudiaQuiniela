@@ -14,7 +14,6 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,8 +21,6 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.BufferedReader;
@@ -45,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ArrayList<String> arrayExpertsVoted = new ArrayList<String>();
     ArrayList<String> arrayExpertsExplain = new ArrayList<String>();
     ArrayList<String> arrayResultMatch = new ArrayList<String>();
+    ArrayList<String> arrayResultMatch1x2 = new ArrayList<String>();
     //arrays_variables_expertos//
     /////////////////////////////
     //arrays_variables_usuarios
@@ -163,9 +161,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(true)
             {
 //                String urlString = "http://quiniela.combinacionganadora.com/";
-                DownloadWebPageTask downloadWebPageTask = new DownloadWebPageTask();
-                downloadWebPageTask.doInBackground("");
-                downloadWebPageTask.onPostExecute("");
+                consultarQuiniCombiGanadora consultarQuiniCombiGanadora = new consultarQuiniCombiGanadora();
+                consultarQuiniCombiGanadora.doInBackground("");
+                consultarQuiniCombiGanadora.onPostExecute("");
             }
             else
             {
@@ -198,7 +196,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    private class DownloadWebPageTask extends AsyncTask<String, Void, String>
+    private class consultarQuinielista extends AsyncTask<String, Void, String>
+    {
+        @Override
+        protected String doInBackground(String... params)
+        {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s)
+        {
+            super.onPostExecute(s);
+        }
+    }
+    private class consultarQuiniCombiGanadora extends AsyncTask<String, Void, String>
     {
         @Override
         protected void onPreExecute()
@@ -239,12 +251,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 {
                     lineCounter++;
                     //
-                    //EXPERT STATS
+                    //              EXPERT STATS
                     //
-                    if(lineCounter>=948)
-                    {
-                        System.out.println();
-                    }
                     if(line.contains("Nuestro pron")&&line.contains("jornada")&&line.contains("es el siguiente"))
                     {
                         startExpertStats = true;
@@ -286,7 +294,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     }
                                 }
                             }
-
                             arrayExpertsVoted.add(result);
                             thereIsSecondLineSpecified = false;
                             fistLineExplanation="";
@@ -317,7 +324,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     fistLineExplanation = explanation;
                                     thereIsSecondLineSpecified = true;
                                 }
-
                             }
                         }
                         if (line.contains("ctrlNews_tagBar") )
@@ -371,6 +377,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 if(!result.equals(">"))
                                 {
                                     arrayResultMatch.add(result);
+                                    if(result.length()>2)
+                                    {
+                                        if(!result.contains("---"))
+                                        {
+                                            int golesE1 = Integer.valueOf(result.substring(0,1));
+                                            int golesE2 = Integer.valueOf(result.substring(2,3));
+
+                                            if(golesE1>golesE2)
+                                            {
+                                                arrayResultMatch1x2.add("1");
+                                            }
+                                            else if(golesE2>golesE1)
+                                            {
+                                                arrayResultMatch1x2.add("2");
+                                            }
+                                            else
+                                            {
+                                                arrayResultMatch1x2.add("X");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            arrayResultMatch1x2.add("[ ]");
+                                        }
+
+                                    }
+
                                 }
                                 if(line.contains("ctrlHeadedBox_preFooter styleCenter black"))
                                 {
@@ -605,6 +638,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             catch (Exception e)
             {
                 e.printStackTrace();
+                dialog.dismiss();
             }
             try
             {
@@ -682,6 +716,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             catch (Exception e)
             {
                 e.printStackTrace();
+                dialog.dismiss();
             }
             return response;
         }
@@ -775,7 +810,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 {
                     for(String s: arrayResultMatch)
                     {
-                        stringBuilder.append(index+" " +arrayEquipoIzda.get(index-1)+"-"+arrayEquipoDcha.get(index-1)+" "+ arrayResultMatch.get(index-1));
+                        stringBuilder.append(index+" " +arrayEquipoIzda.get(index-1)+"-"+arrayEquipoDcha.get(index-1)+" "+ arrayResultMatch.get(index-1) + " = " + arrayResultMatch1x2.get(index-1));
                         index++;
                         stringBuilder.append("\n");
                     }
@@ -785,6 +820,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             catch (Exception e)
             {
                 e.printStackTrace();
+                dialog.dismiss();
             }
 
             tvResultado.setText(stringBuilder.toString());
