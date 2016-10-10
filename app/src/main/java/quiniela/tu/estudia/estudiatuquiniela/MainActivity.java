@@ -418,8 +418,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             for(int index = 0;index<arrayQuiniDIA.size()-1;index++)
             {
+                if(index+1>9)
+                {
+                    sb.append(
+                            (index+1)+":"
+                    );
+
+                }
+                else
+                {
+                    sb.append(
+                            (index+1)+": ");
+                }
                 sb.append(
-                        (index+1)+": "+
                                 " %1 : " + arrayQuiniPERC1.get(index)+ " "+
                                 " %x : " + arrayQuiniPERCx.get(index)+ " "+
                                 " %2 : " + arrayQuiniPERC2.get(index)+ " "+
