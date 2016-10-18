@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Páginas disponibles">
+    <item android:title="Menu de la suerte">
         <menu>
             <item
                 android:id="@+id/nav_1"
-                android:icon="@android:drawable/presence_online"
-                android:title="Quinielista.es" />
+                android:icon="@android:drawable/btn_star_big_on"
+                android:title="Contrastar apuestas realizadas" />
             <item
                 android:id="@+id/nav_2"
-                android:icon="@android:drawable/presence_online"
-                android:title="Quiniela Combinación Ganadora" />
+                android:icon="@android:drawable/btn_star_big_on"
+                android:title="Apuestas sugeridas para la jornada" />
             <item
                 android:id="@+id/nav_3"
-                android:icon="@android:drawable/presence_online"
-                android:title="1x2 Quiniela Marca" />
+                android:icon="@android:drawable/btn_star_big_on"
+                android:title="Interpretación partidos jornada" />
             <item
                 android:id="@+id/nav_4"
-                android:icon="@android:drawable/presence_offline"
-                android:title="Tools" />
+                android:icon="@android:drawable/btn_star_big_on"
+                android:title="Estadisticas" />
         </menu>
     </item>
 </menu>

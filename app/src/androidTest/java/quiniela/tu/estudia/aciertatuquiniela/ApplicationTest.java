@@ -1,4 +1,4 @@
-package quiniela.tu.estudia.estudiatuquiniela;
+package quiniela.tu.estudia.aciertatuquiniela;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Estudia tu quiniela"
+        android:text="@string/app_name_spaces"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
