@@ -31,8 +31,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     int tester = 0;
     public TextView tvResultado;
     private ProgressDialog dialog;
+
     //arrays_variables_expertos
     boolean startExpertStats = false;
+
     //Quinielista:
     ArrayList<String> arrayQuiniDIA;
     ArrayList<String> arrayQuiniHORA;
@@ -45,12 +47,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ArrayList<String> arrayQuini15A;
     ArrayList<String> arrayQuini15B;
 
-    ArrayList<String> arrayEquipoIzda;
-    ArrayList<String> arrayEquipoDcha;
     ArrayList<String> arrayExpertsVoted;
     ArrayList<String> arrayExpertsExplain;
-    ArrayList<String> arrayResultadosPartidosDirecto;
-    ArrayList<String> arrayResultadosPartidosDirecto1x2;
+
     ArrayList<String> arrayUsersVotedUno;
     ArrayList<String> arrayUsersVotedEquis;
     ArrayList<String> arrayUsersVotedDos;
@@ -58,6 +57,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ArrayList<String> arrayUsersVotedHighLightPercent;
     ArrayList<String> arrayUsersQuinceA;
     ArrayList<String> arrayUsersQuinceB;
+
+    ArrayList<String> arrayEquipoIzda;
+    ArrayList<String> arrayEquipoDcha;
+    ArrayList<String> arrayResultadosPartidosDirecto;
+    ArrayList<String> arrayResultadosPartidosDirecto1x2;
+
+
     //arrays_variables_expertos//
     /////////////////////////////
     //arrays_variables_usuarios
@@ -222,11 +228,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                String urlString = "http://quiniela.combinacionganadora.com/";
 
 
-                Toast.makeText(this,"2",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"1",Toast.LENGTH_SHORT).show();
 
-
-
-
+                ListView listView = (ListView) findViewById(R.id.listViewPartidosDirecto);
+                ArrayAdapterComparador arrayAdapterComparador = new ArrayAdapterComparador(activity,
+                        arrayQuiniPERC1,
+                        arrayQuiniPERCx,
+                        arrayQuiniPERC2,
+                        arrayQuiniHIST1,
+                        arrayQuiniHISTx,
+                        arrayQuiniHIST2,
+                        arrayQuini15A,
+                        arrayQuini15B,
+                        arrayUsersVotedUno,
+                        arrayUsersVotedEquis,
+                        arrayUsersVotedDos);
+                listView.setAdapter(arrayAdapterComparador);
             }
             /*else
             {
@@ -311,11 +328,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     .replace("<!-- 42 -->","")
                                     .replace("<!-- 1 -->","")
                                     .replace("<!--30-->","")
+                                    .replace("<!--30-->","")
                                     .replace("<!--28-->","")
                                     .replace("<!-- 2 -->","")
-                                    .replace("<!--","")
-                                    .replace("-->","")
-                                    .replace("<!--","")
                                     .trim();
 
                             System.out.println();
@@ -343,14 +358,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             //Historico
                             else if(line.contains("1 -->"))
                             {
+                                lineaTrimmed=lineaTrimmed.replace("<!--12-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--59-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--58-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--52-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--45-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--55-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--28-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--24-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--40-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--43-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--46-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--48-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--","");
+                                lineaTrimmed=lineaTrimmed.replace("-->","");
                                 arrayQuiniHIST1.add(lineaTrimmed);
                             }
                             else if(line.contains("X -->"))
                             {
+                                lineaTrimmed=lineaTrimmed.replace("<!--17-->","")
+                                                         .replace("<!--27-->","")
+                                                         .replace("<!--31-->","")
+                                                         .replace("<!--29-->","")
+                                                         .replace("<!--18-->","")
+                                                         .replace("<!--26-->","")
+                                                         .replace("<!--24-->","")
+                                                         .replace("<!--25-->","")
+                                                         .replace("<!--32-->","")
+                                                         .replace("<!--33-->","")
+                                                         .replace("<!--","")
+                                                         .replace("-->","")
+                                                         .replace("<!-- X -->","")
+                                                         .replace("X","").trim();
                                 arrayQuiniHISTx.add(lineaTrimmed);
                             }
                             else if(line.contains("2 -->"))
                             {
+                                lineaTrimmed=lineaTrimmed.replace("<!--71-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--15-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--18-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--22-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--25-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--29-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--27-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--48-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--20-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!--","");
+                                lineaTrimmed=lineaTrimmed.replace("-->","");
                                 arrayQuiniHIST2.add(lineaTrimmed);
                             }
                         }

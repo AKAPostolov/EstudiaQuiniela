@@ -2,37 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="quiniela.tu.acierta.aciertatuquiniela.MainActivity"
     tools:showIn="@layout/app_bar_main"
-    android:gravity="center|top">
+    android:gravity="center|top"
+    android:weightSum="10">
     <LinearLayout
+        android:id="@+id/lilaPrincipal"
         android:gravity="center|top"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_width="0dp"
+        android:layout_weight="10"
         android:layout_height="match_parent"
         android:layout_margin="5dp">
-        <TextView
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:layout_gravity="center"
-            android:textSize="12sp"
+        <LinearLayout
+            android:id="@+id/lilaPartidosActuales"
+            android:gravity="center|top"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Partidos \n"
-            android:maxLines="500"
-            android:scrollbars="vertical"
-            android:textStyle=""
-            android:gravity="top|center"
-            android:id="@+id/tvResultados"/>
-        <ListView
-            android:id="@+id/listViewPartidosDirecto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp">
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_gravity="center"
+                android:textSize="12sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Partidos \n"
+                android:maxLines="500"
+                android:scrollbars="vertical"
+                android:textStyle=""
+                android:gravity="top|center"
+                android:id="@+id/tvResultados"/>
+            <ListView
+                android:id="@+id/listViewPartidosDirecto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
