@@ -335,6 +335,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                             System.out.println();
                             System.out.println("Linea: " + lineCounter + " " + lineaTrimmed);
+                            //Historico
+                            for (int i = 0; i<=99;i++)
+                            {
+                                lineaTrimmed=lineaTrimmed.replace("<!--"+String.valueOf(i)+"-->","").trim();
+                            }
+                            lineaTrimmed=lineaTrimmed.trim();
                             if(line.contains("DIA"))
                             {
                                 arrayQuiniDIA.add(lineaTrimmed);
@@ -355,56 +361,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             {
                                 arrayQuiniPERC2.add(lineaTrimmed);
                             }
-                            //Historico
                             else if(line.contains("1 -->"))
                             {
-                                lineaTrimmed=lineaTrimmed.replace("<!--12-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--59-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--58-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--52-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--45-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--55-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--28-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--24-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--40-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--43-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--46-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--48-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!-- 1 -->","");
                                 lineaTrimmed=lineaTrimmed.replace("<!--","");
                                 lineaTrimmed=lineaTrimmed.replace("-->","");
+                                lineaTrimmed=lineaTrimmed.trim();
                                 arrayQuiniHIST1.add(lineaTrimmed);
                             }
                             else if(line.contains("X -->"))
                             {
-                                lineaTrimmed=lineaTrimmed.replace("<!--17-->","")
-                                                         .replace("<!--27-->","")
-                                                         .replace("<!--31-->","")
-                                                         .replace("<!--29-->","")
-                                                         .replace("<!--18-->","")
-                                                         .replace("<!--26-->","")
-                                                         .replace("<!--24-->","")
-                                                         .replace("<!--25-->","")
-                                                         .replace("<!--32-->","")
-                                                         .replace("<!--33-->","")
-                                                         .replace("<!--","")
-                                                         .replace("-->","")
-                                                         .replace("<!-- X -->","")
-                                                         .replace("X","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!-- X -->","");
+                                lineaTrimmed=lineaTrimmed.replace("<!--","");
+                                lineaTrimmed=lineaTrimmed.replace("-->","");
+                                lineaTrimmed=lineaTrimmed.trim();
                                 arrayQuiniHISTx.add(lineaTrimmed);
                             }
                             else if(line.contains("2 -->"))
                             {
-                                lineaTrimmed=lineaTrimmed.replace("<!--71-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--15-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--18-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--22-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--25-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--29-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--27-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--48-->","").trim();
-                                lineaTrimmed=lineaTrimmed.replace("<!--20-->","").trim();
+                                lineaTrimmed=lineaTrimmed.replace("<!-- 2 -->","");
                                 lineaTrimmed=lineaTrimmed.replace("<!--","");
                                 lineaTrimmed=lineaTrimmed.replace("-->","");
+                                lineaTrimmed=lineaTrimmed.trim();
                                 arrayQuiniHIST2.add(lineaTrimmed);
                             }
                         }
@@ -912,9 +890,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                                     if(finB==3)
                                     {
-                                        result15 = result15 + "-" + "M";
+                                        result15 = result15 + "M";
                                     }
-                                    else result15 = result15 + "-" + String.valueOf(finB);
+                                    else result15 = result15 + String.valueOf(finB);
                                     if(iniA>finB)
                                     {
                                         result15 = result15 + "=1";

@@ -59,8 +59,19 @@ public class ArrayAdapterComparador extends ArrayAdapter<String>
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
+        System.out.println("GetViewPosition:" + position);
         LayoutInflater layoutInflater = context.getLayoutInflater();
-        View rowView = layoutInflater.inflate(R.layout.layout_adapter_quinielista_vs_quinicombigana,null);
+        View rowView;
+        if(position==0)
+        {
+
+            rowView = layoutInflater.inflate(R.layout.layout_adapter_quinielista_vs_quinicombigana_cabecera,null);
+        }
+        else
+        {
+            rowView = layoutInflater.inflate(R.layout.layout_adapter_quinielista_vs_quinicombigana,null);
+        }
+
         if(arrayQuiniPERC1!=null)
         {
             TextView tv0 = (TextView) rowView.findViewById(R.id.tv0);
@@ -79,7 +90,7 @@ public class ArrayAdapterComparador extends ArrayAdapter<String>
 //                String cadenaUTF8 = new String(cadena.getBytes(), "UTF-8");
 //                String encodedText = Html.fromHtml(cadena).toString();
 //                tv.setText( encodedText );
-                tv0.setText(""+(position+1));
+                tv0.setText(""+(position+1 ));
                 tv1.setText(""+arrayQuiniPERC1.get(position));
                 tv2.setText(""+arrayQuiniPERCx.get(position));
                 tv3.setText(""+arrayQuiniPERC2.get(position));
