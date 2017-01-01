@@ -46,7 +46,19 @@ public class ArrayAdapterResultadosDirecto extends ArrayAdapter<String>
 
                 String cadena = arrayQuiniDIA.get(position) + " " + arrayQuiniHORA.get(position) + " " + arrayEquipoIzda.get(position) + " - " + arrayEquipoDcha.get(position) + " " + arrayResultadosPartidosDirecto.get(position).replace("---","");
                 String cadenaUTF8 = new String(cadena.getBytes(), "UTF-8");
-                String encodedText = Html.fromHtml(cadena).toString();
+//                String encodedText = Html.fromHtml(cadena).toString();
+//                tv.setText( encodedText );
+
+                String text = new String(cadena.getBytes("ISO-8859-1"));
+                String encodedText = Html.fromHtml(text).toString();
+                if(encodedText.contains("S"))
+                {
+                    encodedText = encodedText.replace("?","Á");
+                }
+                if(encodedText.contains("M"))
+                {
+                    encodedText = encodedText.replace("?","É");
+                }
                 tv.setText( encodedText );
             }
             catch(Exception e)

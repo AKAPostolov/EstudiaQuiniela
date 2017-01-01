@@ -78,6 +78,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dialog = new ProgressDialog(this);
 
         super.onCreate(savedInstanceState);
+
+        inicializarVistaPrincipal();
+        obtenerResultadosActuales();
+
+        /*
+        if(checkNetworkConnection())
+        {
+
+//            webView.loadUrl(url2);
+            Toast.makeText(this,"Hay conexión a internet",Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Toast.makeText(this,"No hay conexión a internet",Toast.LENGTH_LONG).show();
+        }
+        */
+
+    }
+    public void inicializarVistaPrincipal()
+    {
         setContentView(R.layout.activity_main_view);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name_spaces);
@@ -86,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        /*
+                /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -122,19 +142,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         tvResultado = (TextView)  findViewById(R.id.tvResultados);
 
-        obtenerResultadosActuales();
-        /*
-        if(checkNetworkConnection())
-        {
-
-//            webView.loadUrl(url2);
-            Toast.makeText(this,"Hay conexión a internet",Toast.LENGTH_LONG).show();
-        }
-        else
-        {
-            Toast.makeText(this,"No hay conexión a internet",Toast.LENGTH_LONG).show();
-        }
-        */
 
     }
     public void obtenerResultadosActuales()
@@ -261,12 +268,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if (id == R.id.nav_2)
         {
-
-
+            Toast.makeText(this,"Disponible pronto",Toast.LENGTH_SHORT).show();
+            inicializarVistaPrincipal();
+            rellenarResultadosDirecto();
         }
         else if (id == R.id.nav_3)
         {
-            Toast.makeText(this,"3",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Disponible pronto",Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -334,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     .trim();
 
                             System.out.println();
-                            System.out.println("Linea: " + lineCounter + " " + lineaTrimmed);
+//                            System.out.println("Linea: " + lineCounter + " " + lineaTrimmed);
                             //Historico
                             for (int i = 0; i<=99;i++)
                             {
@@ -366,6 +374,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 lineaTrimmed=lineaTrimmed.replace("<!-- 1 -->","");
                                 lineaTrimmed=lineaTrimmed.replace("<!--","");
                                 lineaTrimmed=lineaTrimmed.replace("-->","");
+                                lineaTrimmed=lineaTrimmed.replace(" ","");
+                                lineaTrimmed=lineaTrimmed.replace("-","");
                                 lineaTrimmed=lineaTrimmed.trim();
                                 arrayQuiniHIST1.add(lineaTrimmed);
                             }
@@ -374,6 +384,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 lineaTrimmed=lineaTrimmed.replace("<!-- X -->","");
                                 lineaTrimmed=lineaTrimmed.replace("<!--","");
                                 lineaTrimmed=lineaTrimmed.replace("-->","");
+                                lineaTrimmed=lineaTrimmed.replace(" ","");
+                                lineaTrimmed=lineaTrimmed.replace("-","");
                                 lineaTrimmed=lineaTrimmed.trim();
                                 arrayQuiniHISTx.add(lineaTrimmed);
                             }
@@ -382,6 +394,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 lineaTrimmed=lineaTrimmed.replace("<!-- 2 -->","");
                                 lineaTrimmed=lineaTrimmed.replace("<!--","");
                                 lineaTrimmed=lineaTrimmed.replace("-->","");
+                                lineaTrimmed=lineaTrimmed.replace(" ","");
+                                lineaTrimmed=lineaTrimmed.replace("-","");
                                 lineaTrimmed=lineaTrimmed.trim();
                                 arrayQuiniHIST2.add(lineaTrimmed);
                             }
@@ -546,6 +560,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if(line.contains("Nuestro pron")&&line.contains("jornada")&&line.contains("es el siguiente"))
                     {
                         startExpertStats = true;
+                        System.out.println("Quini Combi: B1Start ");
                         System.out.println("Recogiendo sugerencias de los expertos: " + lineCounter);
                     }
                     if(startExpertStats)
@@ -600,7 +615,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 int z = trimCleanedString.indexOf("</p>");
                                 if(a>-1&&z>-1)
                                 {
-                                    String explanation = trimCleanedString.substring(a,z-("</p>".length()-1));
+                                    int target = z-("</p>".length()-1);
+                                    String explanation = "Empty - ";
+                                    if(target>=a)
+                                    {
+//                                        System.out.println("Explanation pete salvado trimCleanedString: " + trimCleanedString);
+                                        explanation = trimCleanedString.substring(a,target);
+                                    }
+                                    else
+                                    {
+                                        System.out.println("Explanation pete: a      " + a);
+                                        System.out.println("Explanation pete: target " + target);
+                                        System.out.println("Explanation pete: trimCleanedString " + trimCleanedString);
+                                    }
                                     if( (thereIsSecondLineSpecified) && !(fistLineExplanation.equals("")) )
                                     {
                                         String objeto = arrayExpertsExplain.get(arrayExpertsExplain.size()-1);
@@ -610,7 +637,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     }
                                     else
                                     {
-                                        arrayExpertsExplain.add(explanation);
+                                        if(!explanation.contains("href")&&!explanation.trim().equals("</p>"))
+                                        {
+                                            System.out.println(arrayExpertsExplain.size() + " insertamos: " + explanation);
+                                            arrayExpertsExplain.add(explanation);
+                                        }
                                     }
                                     fistLineExplanation = explanation;
                                     thereIsSecondLineSpecified = true;
@@ -621,6 +652,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         {
                             startExpertStats = false;
                             startCurrentResultSearch = true;
+                            System.out.println("Quini Combi: B1END");
                         }
                     }
 
@@ -635,24 +667,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         int b = arrayResultadosPartidosDirecto.size();
                         int c = arrayExpertsExplain.size();
                         startCurrentResultSearch = true;
+                        System.out.println("Quini Combi: B2Start ");
+                        System.out.println("Quini Combi: Resultados actuales:");
                     }
                     if(startCurrentResultSearch)
                     {
                         if(line.contains("ctrlIcons openButton"))
                         {
                             tester++;
-                            System.out.println("Counter " + tester);
+//                            System.out.println("Counter " + tester);
                             int a = line.indexOf("title=\"")+"title=\"".length();
                             String aux = line.substring(a);
                             aux = aux.replace("\"","")
                                      .replace("target=_blank></a>","")
                                      .trim();
-                            System.out.println("Line:" + line);
+//                            System.out.println("Line:" + line.trim());
                             int posHiphen = aux.indexOf("-");
                             String team1 = aux.substring(0,posHiphen);
                             String team2 = aux.substring(team1.length()+1);
+                            System.out.print(arrayEquipoIzda.size() + " Team: " + team1);
+                            System.out.print(" vs ");
+                            System.out.println(arrayEquipoDcha.size() + " Team: " + team2);
+
                             arrayEquipoIzda.add(team1);
-                            //String team2 = line.substring(a,b);
                             arrayEquipoDcha.add(team2);
                         }
                         if(!line.contains("col3a"))
@@ -703,6 +740,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 if(line.contains("ctrlHeadedBox_preFooter styleCenter black"))
                                 {
                                     startCurrentResultSearch=false;
+                                    System.out.println("Quini Combi: B2End ");
                                 }
                             }
                         }
@@ -717,8 +755,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if(line.contains("usersSoccerRank optSelectable"))
                     {
                         startUserStats = true;
-                        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                        System.out.println("Busqueda de pronóticos personales jugados:");
+                        System.out.println("Quini Combi: B3Start ");
+                        System.out.println("Busqueda de pronóticos personales jugados: startUserStats");
                     }
                     if(startUserStats)
                     {
@@ -750,7 +788,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 String usersVotedUno = "";
                                 if(a>=0&&b>=0&&b>a)
                                 {
-                                    usersVotedUno = help.substring(a, b);
+                                    usersVotedUno = help.substring(a, b-3);
                                     if (!usersVotedUno.equals("1") && usersVotedUno!="")
                                     {
                                         arrayUsersVotedUno.add(usersVotedUno);
@@ -758,7 +796,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         {
                                             if (!usersVotedUno.equals(""))
                                             {
-                                                System.out.println("Recogiendo pronósticos personales 1 : " + lineCounter);
+//                                                System.out.println("Recogiendo pronósticos personales 1 : " + lineCounter);
                                                 arrayUsersVotedHighLightType.add("1");
                                                 arrayUsersVotedHighLightPercent.add(usersVotedUno);
                                             }
@@ -782,7 +820,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 String usersVotedEquis = "";
                                 if(a>=0&&b>=0&&b>a)
                                 {
-                                    usersVotedEquis = help.substring(a, b);
+                                    usersVotedEquis = help.substring(a, b-3);
                                     if (!usersVotedEquis.equals("X") && !arrayUsersVotedEquis.equals(""))
                                     {
                                         arrayUsersVotedEquis.add(usersVotedEquis);
@@ -811,7 +849,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 String usersVotedDos = "";
                                 if (a >= 0 && b >= 0 && b > a)
                                 {
-                                    usersVotedDos = help.substring(a, b);
+                                    usersVotedDos = help.substring(a, b-3);
                                     if (!usersVotedDos.equals("2") && !usersVotedDos.equals(""))
                                     {
                                         arrayUsersVotedDos.add(usersVotedDos);
@@ -846,7 +884,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             String linePartido15 = line.replace("  "," ").replace(" highLight","").replace("highLight","");
                             if( linePartido15.contains("div class") && linePartido15.contains("%") )
                             {
-                                System.out.println("Encontrados resultados partido 15: " + lineCounter);
+//                                System.out.println("Encontrados resultados partido 15: " + lineCounter);
                                 int posA = linePartido15.indexOf(">")+1;
                                 int posZ = linePartido15.indexOf("%");
                                 String valuePartido15 = linePartido15.substring(posA,posZ);
@@ -925,6 +963,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 totalVotos = "0";
                             }
                             startUserStats = false;
+                            System.out.println("Quini Combi: B3End ");
                         }
                     }
                     //System.out.println("Linea:" + lineCounter + " |" + line);
@@ -941,7 +980,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             try
             {
                 int index = 1;
-                System.out.println("ARRAYS 1x2 usersSoccerRank: size: " +arrayUsersVotedUno.size());
+                System.out.println("Comprobación al final:");
+                System.out.println("ARRAYS 1x2 usersSoccerRank arrayUsersVotedUno: size: " +arrayUsersVotedUno.size());
                 if(arrayUsersVotedUno.size()>0)
                 {
                     for(String s: arrayUsersVotedUno)
@@ -1028,101 +1068,106 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPostExecute(String result)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            //stringBuilder.append("\n");
-            //stringBuilder.append("arrayResultadosPartidosDirecto" + arrayResultadosPartidosDirecto.toString());
-            try
+            rellenarResultadosDirecto();
+        }
+    }
+    public void rellenarResultadosDirecto()
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        //stringBuilder.append("\n");
+        //stringBuilder.append("arrayResultadosPartidosDirecto" + arrayResultadosPartidosDirecto.toString());
+        try
+        {
+            int index = 1;
+            stringBuilder.append("ARRAYS CURRENT RESULT: size: " + arrayResultadosPartidosDirecto.size());
+            stringBuilder.append("\n");
+            if(arrayResultadosPartidosDirecto.size()>0)
             {
-                int index = 1;
-                stringBuilder.append("ARRAYS CURRENT RESULT: size: " + arrayResultadosPartidosDirecto.size());
-                stringBuilder.append("\n");
-                if(arrayResultadosPartidosDirecto.size()>0)
+                System.out.println("Size arrayEquipoIzda: " + arrayEquipoIzda.size());
+                System.out.println("Size arrayResultadosPartidosDirecto1x2: " + arrayResultadosPartidosDirecto1x2.size());
+                System.out.println("Size arrayResultadosPartidosDirecto " + arrayResultadosPartidosDirecto.size());
+                System.out.println("Size arrayEquipoDcha: " + arrayEquipoDcha.size());
+                for(String s: arrayResultadosPartidosDirecto)
                 {
-                    System.out.println("Size arrayEquipoIzda: " + arrayEquipoIzda.size());
-                    System.out.println("Size arrayResultadosPartidosDirecto1x2: " + arrayResultadosPartidosDirecto1x2.size());
-                    System.out.println("Size arrayResultadosPartidosDirecto " + arrayResultadosPartidosDirecto.size());
-                    System.out.println("Size arrayEquipoDcha: " + arrayEquipoDcha.size());
-                    for(String s: arrayResultadosPartidosDirecto)
-                    {
 
-                        stringBuilder.append(index+" " +arrayEquipoIzda.get(index-1)+"-"+arrayEquipoDcha.get(index-1)+" "+ arrayResultadosPartidosDirecto.get(index-1) + " = " + arrayResultadosPartidosDirecto1x2.get(index-1));
-                        index++;
-                        stringBuilder.append("\n");
-                    }
+                    stringBuilder.append(index+" " +arrayEquipoIzda.get(index-1)+"-"+arrayEquipoDcha.get(index-1)+" "+ arrayResultadosPartidosDirecto.get(index-1) + " = " + arrayResultadosPartidosDirecto1x2.get(index-1));
+                    index++;
+                    stringBuilder.append("\n");
                 }
-                if(arrayResultadosPartidosDirecto.size()>13)
-                {
-                    ListView listView = (ListView) findViewById(R.id.listViewPartidosDirecto);
-                    ArrayAdapterResultadosDirecto arrayAdapterResultadosDirecto = new ArrayAdapterResultadosDirecto(activity, arrayEquipoIzda,arrayEquipoDcha,arrayResultadosPartidosDirecto,arrayQuiniDIA,arrayQuiniHORA);
-                    listView.setAdapter(arrayAdapterResultadosDirecto);
+            }
+            if(arrayResultadosPartidosDirecto.size()>13)
+            {
+                ListView listView = (ListView) findViewById(R.id.listViewPartidosDirecto);
+                ArrayAdapterResultadosDirecto arrayAdapterResultadosDirecto = new ArrayAdapterResultadosDirecto(activity, arrayEquipoIzda,arrayEquipoDcha,arrayResultadosPartidosDirecto,arrayQuiniDIA,arrayQuiniHORA);
+                listView.setAdapter(arrayAdapterResultadosDirecto);
 
-                }
+            }
 
-                index = 1;
-                stringBuilder.append("ARRAYS 1x2 \nusersSoccerRank: \nsize: " +arrayUsersVotedUno.size());
-                stringBuilder.append("\n");
-                if(arrayUsersVotedUno.size()>0)
+            index = 1;
+            stringBuilder.append("ARRAYS 1x2 \nusersSoccerRank arrayUsersVotedUno: \nsize: " +arrayUsersVotedUno.size());
+            stringBuilder.append("\n");
+            if(arrayUsersVotedUno.size()>0)
+            {
+                for(String s: arrayUsersVotedUno)
                 {
-                    for(String s: arrayUsersVotedUno)
-                    {
-                        stringBuilder.append(index+" " + arrayUsersVotedUno.get(index-1));
-                        stringBuilder.append(" " + arrayUsersVotedEquis.get(index-1));
-                        stringBuilder.append(" " + arrayUsersVotedDos.get(index-1) + "");
-                        stringBuilder.append("\n");
-                        index++;
-                    }
+                    stringBuilder.append(index+" " + arrayUsersVotedUno.get(index-1));
+                    stringBuilder.append(" " + arrayUsersVotedEquis.get(index-1));
+                    stringBuilder.append(" " + arrayUsersVotedDos.get(index-1) + "");
+                    stringBuilder.append("\n");
+                    index++;
                 }
-                stringBuilder.append("arrayUsersVotedHighLightType\n size: " + arrayUsersVotedHighLightType.size());
-                if(arrayUsersVotedHighLightType.size()>0)
-                    for (String s: arrayUsersVotedHighLightType)
-                    {
-                        stringBuilder.append(s);
-                        stringBuilder.append("\n");
-                    }
-                stringBuilder.append("\n");
-                stringBuilder.append("arrayUsersVotedHighLightPercent\n  size: " + arrayUsersVotedHighLightPercent.size());
-                stringBuilder.append("\n");
-                index = 1;
-                if(arrayUsersVotedHighLightPercent.size()>0)
-                    for (String s: arrayUsersVotedHighLightPercent)
-                    {
-                        stringBuilder.append((index ++)+s);
-                        stringBuilder.append("\n");
-                    }
-                index = 0;
-                stringBuilder.append("\n");
-                stringBuilder.append("arrayUsersQuinceA\n size: " + arrayUsersQuinceA.size());
-                stringBuilder.append("\n");
-                if(arrayUsersQuinceA.size()>0)
-                    for (String s: arrayUsersQuinceA)
-                    {
-                        stringBuilder.append(s);
-                        stringBuilder.append("\n");
-                    }
-                stringBuilder.append("\n");
-                stringBuilder.append("arrayUsersQuinceB \n partido : " + arrayUsersQuinceB.size());
-                stringBuilder.append("\n");
-                if(arrayUsersQuinceB.size()>0)
-                    for (String s: arrayUsersQuinceB)
-                    {
-                        stringBuilder.append(s);
-                        stringBuilder.append("\n");
-                    }
-                stringBuilder.append("\n");
-                stringBuilder.append("1x2 EXPERTS votes: size: " + arrayExpertsVoted.size());
-                stringBuilder.append("\n");
-                index = 1;
-                if(arrayExpertsVoted.size()>0)
+            }
+            stringBuilder.append("arrayUsersVotedHighLightType\n size: " + arrayUsersVotedHighLightType.size());
+            if(arrayUsersVotedHighLightType.size()>0)
+                for (String s: arrayUsersVotedHighLightType)
                 {
-                    for(String s: arrayExpertsVoted)
-                    {
-                        stringBuilder.append(index+" " + arrayExpertsVoted.get(index-1));
-                        index++;
-                        stringBuilder.append("\n");
-                    }
+                    stringBuilder.append(s);
+                    stringBuilder.append("\n");
                 }
-                stringBuilder.append("\n");
-                index = 1;
+            stringBuilder.append("\n");
+            stringBuilder.append("arrayUsersVotedHighLightPercent\n  size: " + arrayUsersVotedHighLightPercent.size());
+            stringBuilder.append("\n");
+            index = 1;
+            if(arrayUsersVotedHighLightPercent.size()>0)
+                for (String s: arrayUsersVotedHighLightPercent)
+                {
+                    stringBuilder.append((index ++)+s);
+                    stringBuilder.append("\n");
+                }
+            index = 0;
+            stringBuilder.append("\n");
+            stringBuilder.append("arrayUsersQuinceA\n size: " + arrayUsersQuinceA.size());
+            stringBuilder.append("\n");
+            if(arrayUsersQuinceA.size()>0)
+                for (String s: arrayUsersQuinceA)
+                {
+                    stringBuilder.append(s);
+                    stringBuilder.append("\n");
+                }
+            stringBuilder.append("\n");
+            stringBuilder.append("arrayUsersQuinceB \n partido : " + arrayUsersQuinceB.size());
+            stringBuilder.append("\n");
+            if(arrayUsersQuinceB.size()>0)
+                for (String s: arrayUsersQuinceB)
+                {
+                    stringBuilder.append(s);
+                    stringBuilder.append("\n");
+                }
+            stringBuilder.append("\n");
+            stringBuilder.append("1x2 EXPERTS votes: size: " + arrayExpertsVoted.size());
+            stringBuilder.append("\n");
+            index = 1;
+            if(arrayExpertsVoted.size()>0)
+            {
+                for(String s: arrayExpertsVoted)
+                {
+                    stringBuilder.append(index+" " + arrayExpertsVoted.get(index-1));
+                    index++;
+                    stringBuilder.append("\n");
+                }
+            }
+            stringBuilder.append("\n");
+            index = 1;
                 /*
                 stringBuilder.append("1x2 EXPERTS motives: size:" + arrayExpertsExplain.size());
                 stringBuilder.append("\n");
@@ -1136,18 +1181,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
                 */
-                index = 1;
-                stringBuilder.append("\n");
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                dialog.dismiss();
-            }
-
-            //tvResultado.setText(stringBuilder.toString());
-            //tvResultado.setMovementMethod(new ScrollingMovementMethod());
+            index = 1;
+            stringBuilder.append("\n");
         }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            dialog.dismiss();
+        }
+
+        //tvResultado.setText(stringBuilder.toString());
+        //tvResultado.setMovementMethod(new ScrollingMovementMethod());
     }
     public final boolean checkNetworkConnection()
     {
