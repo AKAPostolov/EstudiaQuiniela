@@ -59,7 +59,7 @@ public class ArrayAdapterComparador extends ArrayAdapter<String>
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        System.out.println("GetViewPosition:" + position);
+//        System.out.println("GetViewPosition:" + position);
         LayoutInflater layoutInflater = context.getLayoutInflater();
         View rowView;
         if(position==0)
