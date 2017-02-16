@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -170,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void run() {
                     dialog.dismiss();
                 }
-            }, 1200);
+            }, 3200);
         }
 
     }
@@ -543,6 +544,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //
                     //              EXPERT STATS
                     //
+                    System.out.println("_" + line);
                     if(line.contains("Nuestro pron")&&line.contains("jornada")&&line.contains("es el siguiente"))
                     {
                         startExpertStats = true;
@@ -578,10 +580,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             {
                                 for (int i = 1; i<3 ; i++)
                                 {
-                                    String currentResultChar = taglessLine.substring(b-i,b-(i-1));
-                                    if(currentResultChar.equals("1")||currentResultChar.equals("X")||currentResultChar.equals("2"))
+                                    int ini = b-i;
+                                    int fini = b-(i-1);
+                                    if(!line.contains("son los siguientes"))
                                     {
-                                        result = currentResultChar + result;
+                                        String currentResultChar = taglessLine.substring(ini,fini);
+                                        if(currentResultChar.equals("1")||currentResultChar.equals("X")||currentResultChar.equals("2"))
+                                        {
+                                            result = currentResultChar + result;
+                                        }
                                     }
                                 }
                             }
@@ -591,7 +598,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                         else
                         {
-                            if(!line.contains("strong")&&!line.contains("uestro")&&!line.contains("Según")&&!line.contains("clear"))
+                            if(!line.contains("strong")&&!line.contains("uestro")&&!line.contains("Según")&&!line.contains("clear")&&(line.length()>9))
                             {
                                 //MotivesVotationExperts:array:
                                 String trimCleanedString = line
@@ -600,7 +607,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 int z = trimCleanedString.indexOf("</p>");
                                 if(a>-1&&z>-1)
                                 {
-                                    String explanation = trimCleanedString.substring(a,z-("</p>".length()-1));
+                                    int ini = a;
+                                    int fini = z-("</p>".length()-1);
+                                    String explanation = trimCleanedString.substring(ini,fini);
                                     if( (thereIsSecondLineSpecified) && !(fistLineExplanation.equals("")) )
                                     {
                                         String objeto = arrayExpertsExplain.get(arrayExpertsExplain.size()-1);
@@ -1145,8 +1154,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 dialog.dismiss();
             }
 
-            //tvResultado.setText(stringBuilder.toString());
-            //tvResultado.setMovementMethod(new ScrollingMovementMethod());
+//            tvResultado.setText(stringBuilder.toString());
+//            tvResultado.setMovementMethod(new ScrollingMovementMethod());
         }
     }
     public final boolean checkNetworkConnection()
